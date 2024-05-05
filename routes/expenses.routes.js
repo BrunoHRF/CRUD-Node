@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const Expense = require("../models/expense.model");
 const {
   getExpenses,
   getExpenseById,
