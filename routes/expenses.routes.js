@@ -22,7 +22,6 @@ const createExpenseSchema = z.object({
 
     return expenseDate;
   }),
-  user: z.string(),
   cost: z.number().positive()
 });
 
