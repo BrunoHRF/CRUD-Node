@@ -6,7 +6,7 @@ const ExpenseSchema = mongoose.Schema({
     require: [true, "Exprenses properly descripted"]
   },
   date: {
-    type: String,
+    type: Date,
     require: [true, "Date when expenses occured"]
   },
   user: {
