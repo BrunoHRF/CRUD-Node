@@ -9,6 +9,7 @@ const {
 } = require("../controllers/expenses.controller");
 const { z } = require("zod");
 const { validateRequest } = require("zod-express-middleware");
+const verifyUser = require("../middlewares/verify-user");
 
 const createExpenseSchema = z.object({
   description: z.string().max(191),
@@ -25,6 +26,7 @@ const createExpenseSchema = z.object({
   cost: z.number().positive()
 });
 
+router.use(verifyUser);
 router.get("/", getExpenses);
 router.get("/:id", getExpenseById);
 router.post(
