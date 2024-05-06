@@ -2,16 +2,16 @@ const express = require("express");
 const router = express.Router();
 const {
   getExpenses,
-  getExpenseById,
+  getExpensesByUser,
   registerExpense,
-  registerExpenseById,
+  updateExpenseById,
   removeExpense
 } = require("../controllers/expenses.controller");
 const { z } = require("zod");
 const { validateRequest } = require("zod-express-middleware");
 const verifyUser = require("../middlewares/verify-user");
 
-const createExpenseSchema = z.object({
+const expenseBodySchema = z.object({
   description: z.string().max(191),
   date: z.coerce.string().refine(value => {
     const expenseDate = new Date(value);
@@ -27,21 +27,21 @@ const createExpenseSchema = z.object({
 
 router.use(verifyUser);
 router.get("/", getExpenses);
-router.get("/:id", getExpenseById);
+router.get("/user", getExpensesByUser);
 router.post(
   "/",
   validateRequest({
-    body: createExpenseSchema
+    body: expenseBodySchema
   }),
   registerExpense
 );
 
-router.post(
+router.put(
   "/:id",
   validateRequest({
-    body: createExpenseSchema
+    body: expenseBodySchema
   }),
-  registerExpenseById
+  updateExpenseById
 );
 
 router.delete("/:id", removeExpense);

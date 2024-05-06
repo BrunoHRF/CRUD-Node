@@ -9,10 +9,10 @@ const getExpenses = async (req, res) => {
   }
 };
 
-const getExpenseById = async (req, res) => {
+const getExpensesByUser = async (req, res) => {
   try {
-    const { id } = req.params;
-    const expense = await Expense.findById(id);
+    const userId = req.userId;
+    const expense = await Expense.find({ userId });
 
     if (!expense) res.status(404).json({ message: "Data not found" });
 
@@ -39,14 +39,18 @@ const registerExpense = async (req, res) => {
   }
 };
 
-const registerExpenseById = async (req, res) => {
+const updateExpenseById = async (req, res) => {
   try {
     const { id } = req.params;
-    const expense = await Expense.findByIdAndUpdate(id, req.body);
+    const expense = await Expense.findById(id);
 
     if (!expense) res.status(404).json({ message: "Data not found" });
 
-    const updatedExpense = await Expense.findById(id);
+    if (expense.userId !== req.userId) {
+      return res.status(409).json({ message: "User not authorized" });
+    }
+
+    const updatedExpense = await Expense.findByIdAndUpdate(id, req.body);
 
     res.status(200).json(updatedExpense);
   } catch (error) {
@@ -76,8 +80,8 @@ const removeExpense = async (req, res) => {
 
 module.exports = {
   getExpenses,
-  getExpenseById,
+  getExpensesByUser,
   registerExpense,
-  registerExpenseById,
+  updateExpenseById,
   removeExpense
 };
