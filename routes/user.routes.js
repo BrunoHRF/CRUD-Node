@@ -3,7 +3,7 @@ const router = express.Router();
 const {
   authenticateUser,
   createUser
-} = require("../controllers/user-controller");
+} = require("../controllers/user.controller");
 const { z } = require("zod");
 const { validateRequest } = require("zod-express-middleware");
 

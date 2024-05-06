@@ -1,4 +1,7 @@
 const Expense = require("../models/expense.model");
+const User = require("../models/user.model");
+
+const resend = require("../utils/resend");
 
 const getExpenses = async (req, res) => {
   try {
@@ -31,6 +34,18 @@ const registerExpense = async (req, res) => {
       date,
       cost,
       userId: req.userId
+    });
+
+    const user = await User.findById(req.userId);
+
+    await resend.emails.send({
+      from: "onboarding@resend.dev",
+      to: user.email,
+      subject: "Despesa Cadastrada",
+      html: `<p>Nova despesa cadastrada no valor de <b>${new Intl.NumberFormat(
+        "pt-BR",
+        { style: "currency", currency: "BRL" }
+      ).format(cost)}</b></p>`
     });
 
     res.status(200).json(expense);
